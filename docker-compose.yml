@@ -1,0 +1,33 @@
+version: "3.3"
+
+services:
+
+  master:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    hostname: master
+    environment:
+      SA_PASSWORD: "MssqlPass123"
+    ports:
+      - "2500:1433"
+    volumes:
+      - $PWD/scripts:/scripts
+      - $PWD/data/shared:/var/opt/mssql/shared
+      - $PWD/data/backup:/var/opt/mssql/backup
+      - $PWD/log/master:/var/opt/mssql/log
+    working_dir: /scripts
+    entrypoint: /scripts/entrypoint.sh
+
+  replica:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    hostname: replica
+    environment:
+      SA_PASSWORD: "MssqlPass123"
+    ports:
+      - "2600:1433"
+    volumes:
+      - $PWD/scripts:/scripts
+      - $PWD/data/shared:/var/opt/mssql/shared
+      - $PWD/data/backup:/var/opt/mssql/backup
+      - $PWD/log/replica:/var/opt/mssql/log
+    working_dir: /scripts
+    entrypoint: /scripts/entrypoint.sh
